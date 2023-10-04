@@ -1,22 +1,46 @@
+const crypto = require('crypto');
+const { getPool } = require("./createPool");
+const { log } = require('console');
+
 class Shortener {
+    static connPool;
 
-    constructor(id, url) {
-        this.id = id
-        this.url = url
+    static async createConnectionPool() {
+        if (!this.connPool) {
+            this.connPool = await getPool();
+        }
+        return this.connPool;
     }
 
-    async genearateId() {
+    static async generateId(url) {
+        const conn = await this.createConnectionPool();
 
+        const check = await conn.query("SELECT short_url FROM url_shortener WHERE url = ?", [url])
+        if (check.length === 1) {
+            return check[0].short_url
+        }
+
+        const hash = crypto.createHash('sha256');
+        hash.update(url);
+        const fullHash = hash.digest('hex');
+        const id = fullHash.slice(0, 8);
+        await conn.query("INSERT INTO url_shortener (short_url, url) VALUES(?, ?)", [id, url]);
+        return id;
     }
 
-    async getRedirect() {
+    static async getRedirect(id) {
+        const conn = await this.createConnectionPool();
+        const [rows] = await conn.query("SELECT url FROM url_shortener WHERE short_url = ?", [id]);
 
+        return rows.url;
     }
 
-    async isValid() {
-
+    static async isValid(id) {
+        const conn = await this.createConnectionPool();
+        const [result] = await conn.query("SELECT COUNT(*) as count FROM url_shortener WHERE short_url = ?", [id]);
+        return result.count === 1n;
     }
-
 }
+
 
 module.exports = Shortener
