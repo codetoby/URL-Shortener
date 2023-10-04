@@ -38,8 +38,6 @@ class Shortener {
     static async isValid(id) {
         const conn = await this.createConnectionPool();
         const [result] = await conn.query("SELECT COUNT(*) as count FROM url_shortener WHERE short_url = ?", [id]);
-        ret
-        
         return result.count === 1n;
     }
 }
