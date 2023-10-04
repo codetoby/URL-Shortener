@@ -19,7 +19,6 @@ A simple and efficient URL shortener service that allows users to convert long U
 - This project uses MariaDB as its database. Ensure you have MariaDB installed and running.
 - Create a `.env` file in the root directory.
 - Configure the database settings in the `.env` file. Example: `.env.example`
-- Create a database called url_shortener
-
+- Create a database called `url_shortener`
 
 
