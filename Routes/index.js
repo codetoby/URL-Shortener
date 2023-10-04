@@ -8,7 +8,6 @@ router.get("/:id", async (req, res, next) => {
 
     try {
         const { id } = req.params
-
         if (await Shortener.isValid(id)) {
             const redirect_url = await Shortener.getRedirect(id)
             return res.status(303).redirect(redirect_url)
@@ -33,8 +32,11 @@ router.get("/", (req, res, next) => {
 router.post("/", async (req, res, next) => {
     try {
         const url = req.body.url
-        const id = await Shortener.generateId(url)
-        return res.status(200).json({ id: id })
+        if (Shortener.isValidURL(url)) {
+            const id = await Shortener.generateId(url)
+            return res.status(200).json({ id: id })
+        }
+        return res.status(400).json({ error: "Invalid URL"})
     } catch (error) {
         next(error)
     }
