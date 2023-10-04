@@ -1,6 +1,7 @@
 const express = require("express")
 const path = require("path")
 const routes = require("./Routes")
+const createTable = require("./helpers/createTable")
 
 const PORT = 3000
 
@@ -14,7 +15,14 @@ app.use(express.static("public"));
 
 app.use(routes)
 
-app.listen(PORT, () => {
-    console.log("Listening to Port " + PORT)
-})
+createTable()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log("Listening to Port " + PORT);
+        });
+    })
+    .catch(error => {
+        console.error("Error initializing the database table:", error);
+    });
+
 
