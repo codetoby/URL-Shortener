@@ -18,6 +18,7 @@ A simple and efficient URL shortener service that allows users to convert long U
 - Configure the database settings in the `.env` file. Example: `.env.example`
 
 **Run**:
+- Make sure to have docker installed
 - ```docker-compose up```
 
 
