@@ -1,0 +1,21 @@
+version: '3'
+volumes:
+  data:
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: utils
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: your_root_password
+    ports:
+      - "3307:3307"
+    volumes:
+      - data:/var/lib/mysql
+  web:
+    build: .  
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"

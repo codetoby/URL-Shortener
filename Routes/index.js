@@ -32,11 +32,8 @@ router.get("/", (req, res, next) => {
 router.post("/", async (req, res, next) => {
     try {
         const url = req.body.url
-        if (Shortener.isValidURL(url)) {
-            const id = await Shortener.generateId(url)
-            return res.status(200).json({ id: id })
-        }
-        return res.status(400).json({ error: "Invalid URL"})
+        const id = await Shortener.generateId(url)
+        return res.status(200).json({ id: id })
     } catch (error) {
         next(error)
     }
